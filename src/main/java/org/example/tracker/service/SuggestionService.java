@@ -21,7 +21,7 @@ public class SuggestionService {
     private SuggestionRepository repository;
 
     private static final List<Stage> defaultStages = ImmutableList.of(
-            new Stage(true, "Suggestion"),
+            new Stage(true, "Submitted"),
             new Stage(false, "Accepted"),
             new Stage(false, "Dev Started"),
             new Stage(false, "Dev Complete"),
@@ -40,11 +40,11 @@ public class SuggestionService {
         }
 
         if (CollectionUtils.isEmpty(suggestion.getStages())) {
-            suggestion.setStages(defaultStages);
+            suggestion.setStages(List.copyOf(defaultStages));
         }
 
         if (suggestion.getVote() == null) {
-            suggestion.setVote(defaultVote);
+            suggestion.setVote(new Vote(defaultVote));
         }
 
         return repository.insertSuggestion(suggestion);

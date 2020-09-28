@@ -10,4 +10,9 @@ import lombok.NoArgsConstructor;
 public class Vote {
     private Boolean voted;
     private Long amount;
+
+    public Vote(Vote defaultVote) {
+        this.voted = defaultVote.voted;
+        this.amount = defaultVote.amount;
+    }
 }
