@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class SuggestionService {
@@ -15,5 +16,12 @@ public class SuggestionService {
 
     public List<Suggestion> getAllSuggestions() {
         return repository.getAllSuggestions();
+    }
+
+    public Suggestion insertSuggestion(Suggestion suggestion) {
+        if (suggestion.getId() == null) {
+            suggestion.setId(UUID.randomUUID());
+        }
+        return repository.insertSuggestion(suggestion);
     }
 }

@@ -30,4 +30,9 @@ public class SuggestionRepository {
     public List<Suggestion> getAllSuggestions() {
         return suggestions;
     }
+
+    public Suggestion insertSuggestion(Suggestion suggestion) {
+        boolean add = suggestions.add(suggestion);
+        return add ? suggestion : null;
+    }
 }
