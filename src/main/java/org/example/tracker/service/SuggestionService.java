@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +47,10 @@ public class SuggestionService {
         if (suggestion.getVote() == null) {
             suggestion.setVote(new Vote(defaultVote));
         }
+
+        ZonedDateTime now = ZonedDateTime.now();
+        suggestion.setCreatedDate(now);
+        suggestion.setLastUpdatedDate(now);
 
         return repository.insertSuggestion(suggestion);
     }

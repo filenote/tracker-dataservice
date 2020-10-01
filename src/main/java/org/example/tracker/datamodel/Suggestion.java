@@ -3,6 +3,7 @@ package org.example.tracker.datamodel;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,4 +15,7 @@ public class Suggestion {
     private String description;
     private List<Stage> stages;
     private Vote vote;
+    private ZonedDateTime createdDate;
+    private ZonedDateTime lastUpdatedDate;
+
 }
