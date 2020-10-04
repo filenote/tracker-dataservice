@@ -3,6 +3,7 @@ package org.example.tracker.repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 import org.example.tracker.datamodel.Suggestion;
 import org.springframework.stereotype.Repository;
@@ -10,7 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 @Repository
 public class SuggestionRepository {
@@ -45,5 +49,9 @@ public class SuggestionRepository {
             }
         });
         return suggestions.stream().filter(suggestion -> suggestion.getId().equals(id)).findFirst().orElse(null);
+    }
+
+    public Suggestion getSuggestionById(UUID id) {
+        return Iterables.tryFind(suggestions, suggestion -> id.equals(suggestion != null ? suggestion.getId() : null)).orNull();
     }
 }

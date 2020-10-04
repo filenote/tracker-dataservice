@@ -46,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.GET,
                             "/",
                             "/api/suggestion",
+                            "/api/suggestion/{id}",
                             "/v2/api-docs",
                             "/configuration/ui",
                             "/swagger-resources/**",

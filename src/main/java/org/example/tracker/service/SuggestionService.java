@@ -58,4 +58,8 @@ public class SuggestionService {
     public Suggestion upvoteSuggestion(UUID id) {
         return repository.upvoteSuggestion(id);
     }
+
+    public Suggestion getSuggestionById(UUID id) {
+        return repository.getSuggestionById(id);
+    }
 }

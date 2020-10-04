@@ -20,6 +20,11 @@ public class SuggestionController {
         return service.getAllSuggestions();
     }
 
+    @GetMapping("/{id}")
+    public Suggestion getSuggestionById(@PathVariable UUID id) {
+        return service.getSuggestionById(id);
+    }
+
     @PostMapping
     public Suggestion insertSuggestion(@RequestBody Suggestion suggestion) {
         return service.insertSuggestion(suggestion);
