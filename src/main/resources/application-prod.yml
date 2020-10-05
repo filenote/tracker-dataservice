@@ -1,0 +1,4 @@
+service.password.secret: ${password-secret}
+azure.keyvault:
+  uri: https://tracker-app-kv.vault.azure.net/
+  enabled: true
