@@ -1,0 +1,18 @@
+[
+  {
+    "id": "f8cb4b7a-069b-11eb-adc1-0242ac120002",
+    "suggestionId": "b316a4f0-0072-11eb-adc1-0242ac120001",
+    "username": "test",
+    "comment": "This is a great suggestion!",
+    "createdDate": "2020-10-01T15:00:00.000Z",
+    "updatedDate": "2020-10-01T15:00:00.000Z"
+  },
+  {
+    "id": "f8cb500c-069b-11eb-adc1-0242ac120002",
+    "suggestionId": "b316a4f0-0072-11eb-adc1-0242ac120001",
+    "username": "test",
+    "comment": "This is my second comment.",
+    "createdDate": "2020-10-01T16:00:00.000Z",
+    "updatedDate": "2020-10-01T16:00:00.000Z"
+  }
+]

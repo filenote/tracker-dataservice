@@ -47,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/",
                             "/api/suggestion",
                             "/api/suggestion/{id}",
+                            "/api/comment/suggestion/{id}",
                             "/v2/api-docs",
                             "/configuration/ui",
                             "/swagger-resources/**",

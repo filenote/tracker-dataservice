@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Stage {
+    private Integer stage;
     private Boolean enabled;
     private String name;
 }

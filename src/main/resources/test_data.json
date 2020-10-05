@@ -5,22 +5,27 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "stages": [
       {
+        "stage": 0,
         "enabled": true,
         "name": "Submitted"
       },
       {
+        "stage": 1,
         "enabled": true,
         "name": "Accepted"
       },
       {
+        "stage": 2,
         "enabled": true,
         "name": "Dev Started"
       },
       {
+        "stage": 3,
         "enabled": true,
         "name": "Dev Complete"
       },
       {
+        "stage": 4,
         "enabled": true,
         "name": "Released"
       }
@@ -38,22 +43,27 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "stages": [
       {
+        "stage": 0,
         "enabled": true,
         "name": "Submitted"
       },
       {
+        "stage": 1,
         "enabled": true,
         "name": "Accepted"
       },
       {
+        "stage": 2,
         "enabled": true,
         "name": "Dev Started"
       },
       {
+        "stage": 3,
         "enabled": true,
         "name": "Dev Complete"
       },
       {
+        "stage": 4,
         "enabled": false,
         "name": "Released"
       }
@@ -71,22 +81,27 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "stages": [
       {
+        "stage": 0,
         "enabled": true,
         "name": "Submitted"
       },
       {
+        "stage": 1,
         "enabled": true,
         "name": "Accepted"
       },
       {
+        "stage": 2,
         "enabled": true,
         "name": "Dev Started"
       },
       {
+        "stage": 3,
         "enabled": false,
         "name": "Dev Complete"
       },
       {
+        "stage": 4,
         "enabled": false,
         "name": "Released"
       }
@@ -104,22 +119,27 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "stages": [
       {
+        "stage": 0,
         "enabled": true,
         "name": "Submitted"
       },
       {
+        "stage": 1,
         "enabled": true,
         "name": "Accepted"
       },
       {
+        "stage": 2,
         "enabled": false,
         "name": "Dev Started"
       },
       {
+        "stage": 3,
         "enabled": false,
         "name": "Dev Complete"
       },
       {
+        "stage": 4,
         "enabled": false,
         "name": "Released"
       }
@@ -137,22 +157,27 @@
     "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
     "stages": [
       {
+        "stage": 0,
         "enabled": true,
         "name": "Submitted"
       },
       {
+        "stage": 1,
         "enabled": false,
         "name": "Accepted"
       },
       {
+        "stage": 2,
         "enabled": false,
         "name": "Dev Started"
       },
       {
+        "stage": 3,
         "enabled": false,
         "name": "Dev Complete"
       },
       {
+        "stage": 4,
         "enabled": false,
         "name": "Released"
       }
