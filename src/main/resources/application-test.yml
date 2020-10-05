@@ -1,0 +1,3 @@
+service.password:
+  secret: testing_secret
+  expiration: 864_000_000 # expiration of auth token
