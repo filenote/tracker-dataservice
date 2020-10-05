@@ -1,4 +1,1 @@
-service:
-  password:
-    secret: SOMEREandomsSEcret # auth token secret (real secret should not be here)
-    expiration: 864_000_000 # expiration of auth token
+service.password.expiration: 864_000_000 # expiration of auth token

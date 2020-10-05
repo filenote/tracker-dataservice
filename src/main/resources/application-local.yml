@@ -1,0 +1,1 @@
+service.password.secret: SOMEREandomsSEcret # auth token secret (real secret should not be here)
