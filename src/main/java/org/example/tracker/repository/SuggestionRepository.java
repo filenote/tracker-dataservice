@@ -1,57 +1,52 @@
 package org.example.tracker.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.common.collect.Iterables;
-import com.google.common.io.Resources;
 import org.example.tracker.datamodel.Suggestion;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LimitOperation;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Repository
 public class SuggestionRepository {
 
-    private static List<Suggestion> suggestions;
-    static {
-        try {
-            ObjectMapper o = new ObjectMapper().registerModule(new Jdk8Module()).registerModule(new JavaTimeModule());
-            URL resource = Resources.getResource("test_data.json");
-            String s = Resources.toString(resource, Charset.defaultCharset());
-            Suggestion[] suggestionArray = o.readValue(s, Suggestion[].class);
-            suggestions = new ArrayList<>(Arrays.asList(suggestionArray));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    @Value("${service.collection.suggestion}")
+    private String collection;
 
     public List<Suggestion> getAllSuggestions() {
-        return suggestions;
+        MatchOperation match = Aggregation.match(Criteria.where("_id").exists(true));
+        LimitOperation limit = Aggregation.limit(500); // limiting for now
+        Aggregation aggregation = Aggregation.newAggregation(match, limit);
+        return mongoTemplate.aggregate(aggregation, collection, Suggestion.class).getMappedResults();
     }
 
     public Suggestion insertSuggestion(Suggestion suggestion) {
-        boolean add = suggestions.add(suggestion);
-        return add ? suggestion : null;
+        return mongoTemplate.insert(suggestion, collection);
     }
 
     public Suggestion upvoteSuggestion(UUID id) {
-        suggestions.forEach(suggestion -> {
-            if (suggestion.getId().equals(id)) {
-                Long current = suggestion.getVote().getAmount();
-                suggestion.getVote().setAmount(current + 1);
-            }
-        });
-        return suggestions.stream().filter(suggestion -> suggestion.getId().equals(id)).findFirst().orElse(null);
+        Update update = new Update();
+        update.inc("vote.amount");
+        Query query = Query.query(Criteria.where("_id").is(id));
+        return mongoTemplate.findAndModify(query, update, new FindAndModifyOptions().returnNew(true), Suggestion.class);
     }
 
     public Suggestion getSuggestionById(UUID id) {
-        return Iterables.tryFind(suggestions, suggestion -> id.equals(suggestion != null ? suggestion.getId() : null)).orNull();
+        MatchOperation match = Aggregation.match(Criteria.where("_id").is(id));
+        LimitOperation limit = Aggregation.limit(1);
+        Aggregation aggregation = Aggregation.newAggregation(match, limit);
+        return mongoTemplate.aggregate(aggregation, collection, Suggestion.class).getMappedResults().iterator().next();
     }
 }

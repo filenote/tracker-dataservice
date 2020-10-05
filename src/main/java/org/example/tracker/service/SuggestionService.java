@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.*;
 
@@ -52,7 +53,7 @@ public class SuggestionService {
             suggestion.setVote(new Vote(defaultVote));
         }
 
-        ZonedDateTime now = ZonedDateTime.now();
+        Instant now = Instant.now();
         suggestion.setCreatedDate(now);
         suggestion.setLastUpdatedDate(now);
 

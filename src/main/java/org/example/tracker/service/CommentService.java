@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Comparator;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,8 +24,6 @@ public class CommentService {
         if (CollectionUtils.isEmpty(comments)) {
             throw new ElementNotFound("No data was found for " + suggestionId);
         }
-        Comparator<Comment> sortFunction = Collections.reverseOrder(Comparator.comparing(Comment::getCreatedDate));
-        comments.sort(sortFunction);
         return comments;
     }
 
@@ -36,7 +32,7 @@ public class CommentService {
         comment.setId(UUID.randomUUID());
         comment.setComment(request.getComment());
         comment.setSuggestionId(suggestionId);
-        ZonedDateTime now = ZonedDateTime.now();
+        Instant now = Instant.now();
         comment.setUsername(username);
         comment.setCreatedDate(now);
         comment.setUpdatedDate(now);
