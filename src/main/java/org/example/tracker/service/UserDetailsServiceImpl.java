@@ -1,5 +1,6 @@
 package org.example.tracker.service;
 
+import org.example.tracker.datamodel.Role;
 import org.example.tracker.datamodel.UserCredentials;
 import org.example.tracker.repository.UserCredentialsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -24,7 +24,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         } else {
             // last parameter is role
-            User user = new User(credentials.getUsername(), credentials.getPassword(), new ArrayList<>());
+            if (CollectionUtils.isEmpty(credentials.getAuthorities())) {
+                credentials = repository.addAuthority(credentials.getUsername(), Role.USER, true);
+            }
+            User user = new User(credentials.getUsername(), credentials.getPassword(), credentials.getAuthorities());
             return user;
         }
     }

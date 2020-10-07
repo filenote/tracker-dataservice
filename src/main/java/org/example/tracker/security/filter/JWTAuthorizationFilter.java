@@ -3,6 +3,7 @@ package org.example.tracker.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.example.tracker.datamodel.SimplerGrantedAuthority;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.example.tracker.security.filter.Constants.HEADER_STRING;
 import static org.example.tracker.security.filter.Constants.TOKEN_PREFIX;
@@ -49,8 +54,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                     .verify(token.replace(TOKEN_PREFIX, ""));
 
             String user = decodedJWT.getSubject();
+            String[] authorities = decodedJWT.getClaim("authorities").asArray(String.class);
+
+            List<SimplerGrantedAuthority> grantedAuthorities = Arrays.stream(authorities).map(string -> SimplerGrantedAuthority.of(string)).collect(Collectors.toList());
+
             if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+                return new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
             }
             return null;
         }

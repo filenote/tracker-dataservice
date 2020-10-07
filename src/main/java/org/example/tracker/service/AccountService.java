@@ -1,11 +1,16 @@
 package org.example.tracker.service;
 
+import com.google.common.collect.ImmutableList;
+import org.example.tracker.datamodel.Role;
+import org.example.tracker.datamodel.SimplerGrantedAuthority;
 import org.example.tracker.datamodel.UserCredentials;
 import org.example.tracker.exception.UsernameAlreadyExists;
 import org.example.tracker.repository.UserCredentialsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountService {
@@ -16,6 +21,8 @@ public class AccountService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
+    private static final List<SimplerGrantedAuthority> defaultRoles = ImmutableList.of(SimplerGrantedAuthority.of(Role.USER));
+
     public boolean registerAccount(UserCredentials credentials) {
         boolean usernameExists = repository.doesUsernameExist(credentials.getUsername());
         if (usernameExists) {
@@ -23,7 +30,7 @@ public class AccountService {
         }
         String encodedPassword = encoder.encode(credentials.getPassword());
         credentials.setPassword(encodedPassword);
-
+        credentials.setAuthorities(List.copyOf(defaultRoles));
         return repository.addAccount(credentials);
     }
 }

@@ -1,14 +1,21 @@
 package org.example.tracker.repository;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.collections4.CollectionUtils;
+import org.example.tracker.datamodel.Role;
+import org.example.tracker.datamodel.SimplerGrantedAuthority;
 import org.example.tracker.datamodel.UserCredentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.LimitOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.mongodb.core.query.UpdateDefinition;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,6 +25,9 @@ public class UserCredentialsRepository {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Value("${service.collection.user}")
     private String collection;
@@ -42,5 +52,16 @@ public class UserCredentialsRepository {
     public boolean addAccount(UserCredentials credentials) {
         mongoTemplate.insert(UserCredentials.class).inCollection(collection).one(credentials);
         return true;
+    }
+
+    public UserCredentials addAuthority(String username, Role role, boolean initialize) {
+        Query query = Query.query(Criteria.where("username").is(username));
+        UpdateDefinition update;
+        if (initialize) {
+            update = new Update().set("authorities", List.of(SimplerGrantedAuthority.of(role)));
+        } else {
+            update = new Update().addToSet("authorities", SimplerGrantedAuthority.of(role));
+        }
+        return mongoTemplate.findAndModify(query, update, new FindAndModifyOptions().returnNew(true), UserCredentials.class, collection);
     }
 }
