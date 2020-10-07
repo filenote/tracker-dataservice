@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,9 +26,8 @@ public class CommentRepository {
 
     public List<Comment> getAllCommentsForSuggestion(UUID suggestionId) {
         MatchOperation match = Aggregation.match(Criteria.where("suggestionId").is(suggestionId));
-        SortOperation sort = Aggregation.sort(Sort.Direction.DESC, "createdDate");
-        Aggregation aggregation = Aggregation.newAggregation(match, sort);
-        return mongoTemplate.aggregate(aggregation, collection, Comment.class).getMappedResults();
+        Aggregation aggregation = Aggregation.newAggregation(match);
+        return new ArrayList<>(mongoTemplate.aggregate(aggregation, collection, Comment.class).getMappedResults());
     }
 
     public Comment insert(Comment comment) {

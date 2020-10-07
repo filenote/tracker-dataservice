@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Instant;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.Comparator.comparing;
 
 @Service
 public class CommentService {
@@ -24,6 +27,7 @@ public class CommentService {
         if (CollectionUtils.isEmpty(comments)) {
             throw new ElementNotFound("No data was found for " + suggestionId);
         }
+        comments.sort(comparing(Comment::getCreatedDate).reversed());
         return comments;
     }
 
