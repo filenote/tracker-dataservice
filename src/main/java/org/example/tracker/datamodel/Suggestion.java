@@ -16,6 +16,7 @@ public class Suggestion {
     private String description;
     private List<Stage> stages;
     private Vote vote;
+    private Integer currentStage;
     private Instant createdDate;
     private Instant lastUpdatedDate;
 

@@ -1,6 +1,7 @@
 package org.example.tracker.repository;
 
 import org.example.tracker.datamodel.Suggestion;
+import org.example.tracker.datamodel.request.UpdateCurrentStageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
@@ -48,5 +49,12 @@ public class SuggestionRepository {
         LimitOperation limit = Aggregation.limit(1);
         Aggregation aggregation = Aggregation.newAggregation(match, limit);
         return mongoTemplate.aggregate(aggregation, collection, Suggestion.class).getMappedResults().iterator().next();
+    }
+
+    public Suggestion updateCurrentStage(UpdateCurrentStageRequest request) {
+        Update update = new Update();
+        update.set("currentStage", request.getStage().getStage());
+        Query query = Query.query(Criteria.where("_id").is(request.getId()));
+        return mongoTemplate.findAndModify(query, update, new FindAndModifyOptions().returnNew(true), Suggestion.class, collection);
     }
 }

@@ -1,5 +1,6 @@
 package org.example.tracker.config;
 
+import org.example.tracker.datamodel.Role;
 import org.example.tracker.filter.SimpleCORSFilter;
 import org.example.tracker.security.filter.JWTAuthenticationFilter;
 import org.example.tracker.security.filter.JWTAuthorizationFilter;
@@ -54,6 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                             "/configuration/security",
                             "/swagger-ui.html",
                             "/webjars/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/suggestion/stage").hasAuthority(Role.ADMINISTRATOR.stringValue())
                     .anyRequest().authenticated()
                     .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager(), secret, expiration))
@@ -72,6 +74,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
         corsConfiguration.addExposedHeader("Authorization");
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod(HttpMethod.PUT);
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
