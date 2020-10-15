@@ -1,5 +1,7 @@
 package org.example.tracker.repository;
 
+import com.mongodb.client.result.UpdateResult;
+import org.example.tracker.datamodel.Comment;
 import org.example.tracker.datamodel.Suggestion;
 import org.example.tracker.datamodel.request.UpdateCurrentStageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +58,13 @@ public class SuggestionRepository {
         update.set("currentStage", request.getStage().getStage());
         Query query = Query.query(Criteria.where("_id").is(request.getId()));
         return mongoTemplate.findAndModify(query, update, new FindAndModifyOptions().returnNew(true), Suggestion.class, collection);
+    }
+
+    public Comment insertComment(UUID suggestionId, Comment comment) {
+        Update update = new Update().addToSet("comments", comment);
+        Query query = Query.query(Criteria.where("_id").is(suggestionId));
+        long updateResult = mongoTemplate.updateFirst(query, update, Suggestion.class, collection).getModifiedCount();
+        if (updateResult != 0) return comment;
+        return null;
     }
 }

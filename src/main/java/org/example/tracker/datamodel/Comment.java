@@ -11,9 +11,8 @@ import java.util.UUID;
 public class Comment {
     @Id
     private UUID id;
-    private UUID suggestionId;
     private String username;
-    private String comment;
+    private String text;
     private Instant createdDate;
     private Instant updatedDate;
 }

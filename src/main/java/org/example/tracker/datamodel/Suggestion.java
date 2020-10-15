@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,5 +18,5 @@ public class Suggestion {
     private Integer currentStage;
     private Instant createdDate;
     private Instant lastUpdatedDate;
-
+    private List<Comment> comments;
 }

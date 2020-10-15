@@ -2,9 +2,7 @@ package org.example.tracker.service;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.collections4.CollectionUtils;
-import org.example.tracker.datamodel.Stage;
-import org.example.tracker.datamodel.Suggestion;
-import org.example.tracker.datamodel.Vote;
+import org.example.tracker.datamodel.*;
 import org.example.tracker.datamodel.request.UpdateCurrentStageRequest;
 import org.example.tracker.exception.ElementNotFound;
 import org.example.tracker.repository.SuggestionRepository;
@@ -12,11 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
 @Service
 public class SuggestionService {
@@ -36,26 +36,27 @@ public class SuggestionService {
 
     public List<Suggestion> getAllSuggestions() {
         List<Suggestion> suggestions = repository.getAllSuggestions();
-        suggestions.forEach(suggestion -> suggestion
-                .getStages()
-                .sort(comparing(Stage::getStage)));
+        suggestions.forEach(suggestion -> {
+            suggestion.getStages()
+                .sort(comparing(Stage::getStage));
+
+            suggestion.getComments()
+                    .sort(comparing(Comment::getCreatedDate).reversed());
+        });
 
         // this is here because we now need to fill currentStage field
         fixCurrentStageField(suggestions);
-
         enableStagesUntilCurrentStage(suggestions);
 
         return suggestions;
     }
 
     private void enableStagesUntilCurrentStage(List<Suggestion> suggestions) {
-        suggestions.forEach(suggestion -> {
-            suggestion.getStages().forEach(stage -> {
-                if (stage.getStage() <= suggestion.getCurrentStage()) {
-                    stage.setEnabled(true);
-                }
-            });
-        });
+        suggestions.forEach(suggestion -> suggestion.getStages().forEach(stage -> {
+            if (stage.getStage() <= suggestion.getCurrentStage()) {
+                stage.setEnabled(true);
+            }
+        }));
     }
 
     private void fixCurrentStageField(List<Suggestion> suggestions) {
@@ -66,7 +67,7 @@ public class SuggestionService {
                 List<Stage> stages = suggestion.getStages();
                 int index = -1;
                 for (int i = 0; i < stages.size(); i++) {
-                    if (!stages.get(i).getEnabled()) {
+                    if (isFalse(stages.get(i).getEnabled())) {
                         index = i - 1;
                         break;
                     }
@@ -93,7 +94,7 @@ public class SuggestionService {
         if (suggestion.getVote() == null) {
             suggestion.setVote(new Vote(defaultVote));
         }
-
+        suggestion.setComments(Collections.emptyList());
         Instant now = Instant.now();
         suggestion.setCreatedDate(now);
         suggestion.setLastUpdatedDate(now);
@@ -134,5 +135,16 @@ public class SuggestionService {
 
     private void sortStages(Suggestion suggestion) {
         suggestion.getStages().sort(comparing(Stage::getStage));
+    }
+
+    public Comment insertComment(UUID suggestionId, CommentRequest commentRequest, String username) {
+        Comment comment = new Comment();
+        comment.setId(UUID.randomUUID());
+        comment.setText(commentRequest.getText());
+        comment.setUsername(username);
+        Instant instant = Instant.now();
+        comment.setCreatedDate(instant);
+        comment.setUpdatedDate(instant);
+        return repository.insertComment(suggestionId, comment);
     }
 }
