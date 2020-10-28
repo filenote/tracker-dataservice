@@ -13,10 +13,8 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
-import static org.apache.commons.lang3.BooleanUtils.isFalse;
 
 @Service
 public class SuggestionService {
@@ -37,15 +35,18 @@ public class SuggestionService {
     public List<Suggestion> getAllSuggestions() {
         List<Suggestion> suggestions = repository.getAllSuggestions();
         suggestions.forEach(suggestion -> {
-            suggestion.getStages()
-                .sort(comparing(Stage::getStage));
+            if (CollectionUtils.isNotEmpty(suggestion.getStages())) {
+                suggestion.getStages()
+                        .sort(comparing(Stage::getStage));
+            }
 
-            suggestion.getComments()
-                    .sort(comparing(Comment::getCreatedDate).reversed());
+            if (CollectionUtils.isNotEmpty(suggestion.getComments())) {
+                suggestion.getComments()
+                        .sort(comparing(Comment::getCreatedDate).reversed());
+            }
         });
 
         // this is here because we now need to fill currentStage field
-        fixCurrentStageField(suggestions);
         enableStagesUntilCurrentStage(suggestions);
 
         return suggestions;
@@ -57,29 +58,6 @@ public class SuggestionService {
                 stage.setEnabled(true);
             }
         }));
-    }
-
-    private void fixCurrentStageField(List<Suggestion> suggestions) {
-        List<Suggestion>  nullCurrentStage = suggestions.stream().filter(suggestion -> suggestion.getCurrentStage() == null).collect(Collectors.toList());
-
-        if (CollectionUtils.isNotEmpty(nullCurrentStage)) {
-            nullCurrentStage.stream().map(suggestion -> {
-                List<Stage> stages = suggestion.getStages();
-                int index = -1;
-                for (int i = 0; i < stages.size(); i++) {
-                    if (isFalse(stages.get(i).getEnabled())) {
-                        index = i - 1;
-                        break;
-                    }
-                }
-
-                if (index == -1) {
-                    index = stages.size() - 1;
-                }
-
-                return new UpdateCurrentStageRequest(suggestion.getId(), stages.get(index));
-            }).forEach(this::updateCurrentStage);
-        }
     }
 
     public Suggestion insertSuggestion(Suggestion suggestion) {
@@ -124,7 +102,6 @@ public class SuggestionService {
             }
         });
     }
-
 
     public Suggestion updateCurrentStage(UpdateCurrentStageRequest request) {
         Suggestion suggestion = repository.updateCurrentStage(request);
