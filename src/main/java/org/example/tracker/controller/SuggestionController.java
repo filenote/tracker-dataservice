@@ -1,14 +1,16 @@
 package org.example.tracker.controller;
 
-import org.example.tracker.datamodel.Stage;
 import org.example.tracker.datamodel.Suggestion;
 import org.example.tracker.datamodel.request.UpdateCurrentStageRequest;
 import org.example.tracker.service.SuggestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static java.util.Collections.sort;
 
 @RestController
 @RequestMapping("/api/suggestion")
@@ -19,7 +21,9 @@ public class SuggestionController {
 
     @GetMapping
     public List<Suggestion> getAllSuggestions() {
-        return service.getAllSuggestions();
+        List<Suggestion> suggestions = new ArrayList<>(service.getAllSuggestions());
+        sort(suggestions);
+        return suggestions;
     }
 
     @GetMapping("/{id}")

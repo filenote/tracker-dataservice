@@ -35,15 +35,8 @@ public class SuggestionService {
     public List<Suggestion> getAllSuggestions() {
         List<Suggestion> suggestions = repository.getAllSuggestions();
         suggestions.forEach(suggestion -> {
-            if (CollectionUtils.isNotEmpty(suggestion.getStages())) {
-                suggestion.getStages()
-                        .sort(comparing(Stage::getStage));
-            }
-
-            if (CollectionUtils.isNotEmpty(suggestion.getComments())) {
-                suggestion.getComments()
-                        .sort(comparing(Comment::getCreatedDate).reversed());
-            }
+            sortStages(suggestion);
+            sortComments(suggestion);
         });
 
         // this is here because we now need to fill currentStage field
@@ -92,6 +85,7 @@ public class SuggestionService {
         }
         sortStages(suggestion);
         enableStagesUntilCurrentStage(suggestion);
+        sortComments(suggestion);
         return suggestion;
     }
 
@@ -107,11 +101,20 @@ public class SuggestionService {
         Suggestion suggestion = repository.updateCurrentStage(request);
         sortStages(suggestion);
         enableStagesUntilCurrentStage(suggestion);
+        sortComments(suggestion);
         return suggestion;
     }
 
     private void sortStages(Suggestion suggestion) {
-        suggestion.getStages().sort(comparing(Stage::getStage));
+        if (CollectionUtils.isNotEmpty(suggestion.getStages())) {
+            suggestion.getStages().sort(comparing(Stage::getStage));
+        }
+    }
+
+    private void sortComments(Suggestion suggestion) {
+        if (CollectionUtils.isNotEmpty(suggestion.getComments())) {
+            suggestion.getComments().sort(comparing(Comment::getCreatedDate).reversed());
+        }
     }
 
     public Comment insertComment(UUID suggestionId, CommentRequest commentRequest, String username) {
@@ -123,5 +126,16 @@ public class SuggestionService {
         comment.setCreatedDate(instant);
         comment.setUpdatedDate(instant);
         return repository.insertComment(suggestionId, comment);
+    }
+
+    public Suggestion updateComment(UUID suggestionId, UUID commentId, UpdateCommentRequest comment, String username) {
+        Suggestion suggestion = repository.updateComment(suggestionId, commentId, comment, username);
+        if (suggestion == null) {
+            throw new ElementNotFound("No date found to update.");
+        }
+        sortStages(suggestion);
+        sortComments(suggestion);
+        enableStagesUntilCurrentStage(suggestion);
+        return suggestion;
     }
 }
