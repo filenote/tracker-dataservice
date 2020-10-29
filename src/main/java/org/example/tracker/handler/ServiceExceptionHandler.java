@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ServiceExceptionHandler {
 
     @ExceptionHandler(ElementNotFound.class)
-    public final ResponseEntity<?> handleElementNotFound() {
+    public ResponseEntity<Object> handleElementNotFound() {
         return ResponseEntity
                 .noContent()
                 .build();
     }
 
     @ExceptionHandler(FailedToInsert.class)
-    public final ResponseEntity<FailureResponse> handleFailedToInsert() {
+    public ResponseEntity<FailureResponse> handleFailedToInsert() {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(FailureResponse.message("Failed to insert data."));
     }
 
     @ExceptionHandler({ ConflictException.class, UsernameAlreadyExists.class })
-    public final ResponseEntity<FailureResponse> handleConflictException(Exception e) {
+    public ResponseEntity<FailureResponse> handleConflictException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(FailureResponse.message(e.getMessage()));

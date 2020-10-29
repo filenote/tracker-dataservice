@@ -14,11 +14,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.example.tracker.security.filter.Constants.HEADER_STRING;
 import static org.example.tracker.security.filter.Constants.TOKEN_PREFIX;
@@ -44,7 +42,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
-
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(HEADER_STRING);
         if (token != null) {
@@ -56,7 +53,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             String user = decodedJWT.getSubject();
             String[] authorities = decodedJWT.getClaim("authorities").asArray(String.class);
 
-            List<SimplerGrantedAuthority> grantedAuthorities = Arrays.stream(authorities).map(string -> SimplerGrantedAuthority.of(string)).collect(Collectors.toList());
+            List<SimplerGrantedAuthority> grantedAuthorities = Arrays.stream(authorities).map(SimplerGrantedAuthority::of).collect(Collectors.toList());
 
             if (user != null) {
                 return new UsernamePasswordAuthenticationToken(user, null, grantedAuthorities);
