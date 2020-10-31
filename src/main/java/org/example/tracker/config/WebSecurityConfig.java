@@ -43,7 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers(HttpMethod.POST,
                             "/api/account/register",
                             "/api/suggestion",
-                            "/api/suggestion/{id}/upvote").permitAll()
+                            "/api/suggestion/{id}/upvote",
+                            "/api/image").permitAll()
                     .antMatchers(HttpMethod.GET,
                             "/",
                             "/api/suggestion",

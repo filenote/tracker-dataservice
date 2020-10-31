@@ -5,5 +5,9 @@ service:
     user: user
   password.expiration: 864_000_000 # expiration of auth token
 azure.keyvault.enabled: false
-spring.data.mongodb:
-  database: tracker
+spring:
+  servlet.multipart:
+    max-file-size: 10MB
+    max-request-size: 10MB
+  data.mongodb:
+    database: tracker
