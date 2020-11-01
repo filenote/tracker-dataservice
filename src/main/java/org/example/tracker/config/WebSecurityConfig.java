@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,25 +38,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private Long expiration;
 
     @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers(HttpMethod.POST,
+                        "/api/account/register",
+                        "/api/suggestion",
+                        "/api/suggestion/{id}/upvote",
+                        "/api/image")
+                .antMatchers(HttpMethod.GET,
+                        "/",
+                        "/api/suggestion",
+                        "/api/suggestion/{id}",
+                        "/api/comment/suggestion/{id}",
+                        "/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeRequests()
-                    .antMatchers(HttpMethod.POST,
-                            "/api/account/register",
-                            "/api/suggestion",
-                            "/api/suggestion/{id}/upvote",
-                            "/api/image").permitAll()
-                    .antMatchers(HttpMethod.GET,
-                            "/",
-                            "/api/suggestion",
-                            "/api/suggestion/{id}",
-                            "/api/comment/suggestion/{id}",
-                            "/v2/api-docs",
-                            "/configuration/ui",
-                            "/swagger-resources/**",
-                            "/configuration/security",
-                            "/swagger-ui.html",
-                            "/webjars/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/suggestion/stage").hasAuthority(Role.ADMINISTRATOR.stringValue())
                     .anyRequest().authenticated()
                     .and()
