@@ -25,8 +25,8 @@ public class SuggestionService {
     private static final List<Stage> defaultStages = ImmutableList.of(
             new Stage(0, true, "Submitted"),
             new Stage(1, false, "Accepted"),
-            new Stage(2, false, "Dev Started"),
-            new Stage(3, false, "Dev Complete"),
+            new Stage(2, false, "In Progress"),
+            new Stage(3, false, "Complete"),
             new Stage(4, false, "Released")
     );
 
