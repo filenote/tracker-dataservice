@@ -1,5 +1,6 @@
 package org.example.tracker.controller;
 
+import org.example.tracker.datamodel.AccountInformation;
 import org.example.tracker.datamodel.Role;
 import org.example.tracker.datamodel.SimplerGrantedAuthority;
 import org.example.tracker.datamodel.UserCredentials;
@@ -20,6 +21,11 @@ public class AccountController {
     @PostMapping("/register")
     public boolean register(@RequestBody UserCredentials credentials) {
         return service.registerAccount(credentials);
+    }
+
+    @GetMapping
+    public AccountInformation getAccountInformation(Authentication authentication) {
+        return service.getAccountInformation(authentication);
     }
 
     @GetMapping("/auth")
